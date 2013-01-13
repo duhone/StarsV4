@@ -1,0 +1,65 @@
+ps.2.0
+
+def c20,0.5,0.5,0.5,-1.0
+def c21,0.0,0.5,1.0,2.0
+def c22,-1.0,-1.0,-1.0,-1.0
+def c23,2.0,2.0,2.0,2.0
+
+dcl t0.rg  //base color
+dcl t1.rg //base bump
+dcl t2.rg //night
+dcl t4.rgb //light vector
+dcl t5.rgb //half vector
+
+dcl_2d s0
+dcl_2d s1
+dcl_2d s2
+
+
+texld r0,t0,s0  //base color
+texld r1,t1,s1  //base bump
+texld r2,t2,s2  //night
+//texcrd r4.rgb,t4  //light vector
+
+mul r1.xyz,r1,c23
+add r1.xyz,r1,c22
+mul r6.xyz,t4,c23
+add r6.xyz,r6,c22
+
+dp3_sat r1,r1,r6
+add r3,r1,c2
+mul r2,r0,r3
+
+;fresenal term
+add r1,-r1,c23
+add r7,-r0,c23
+mul r1,r1,r1
+mul r1,r1,r1
+mad r4,r1,r7,r0 ;r4 is fresenal term
+
+
+
+//phase
+texld r1,t1,s1  //base bump
+//texcrd r5.rgb,t5  //half vector
+//texld r0,t0  //base color
+
+;specular power N.H^16
+mul r1.rgb,r1,c23
+add r1.rgb,r1,c22
+mul r6.rgb,t5,c23
+add r6.rgb,r6,c22
+
+dp3_sat r1,r1,r6
+mul r1.rgb,r1,r1
+mul r1.rgb,r1,r1
+mov r2.a,c1.a
+mul r1,r1,r1
+mul r1,r1,r1
+mul r1,c4,r1
+
+;final result
+mad r4.rgb,r1,r4,r2
+mov r4.a,r0.a
+mov oC0,r4
+;21 instructions

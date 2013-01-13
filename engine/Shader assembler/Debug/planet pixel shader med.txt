@@ -1,0 +1,10 @@
+ps_1_1
+
+tex t0  //base color
+tex t1  //base bump
+
+dp3_sat r0,t1_bx2,v0_bx2
+add r0.rgb,r0,c2
+mul r0.rgb,r0,t0
++mov r0.a,t0.a
+;5 instructions

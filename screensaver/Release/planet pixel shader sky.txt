@@ -1,0 +1,120 @@
+ps.2.0
+
+def c19,0.0,0.0,0.0,0.0
+
+def c20,0.5,0.5,0.5,-1.0
+def c21,0.0,0.5,1.0,2.0
+def c22,-1.0,-1.0,-1.0,-1.0
+def c23,2.0,2.0,2.0,2.0
+def c24,1.0,1.0,1.0,1.0
+def c25,0.01,0.01,0.01,0.01
+def c26,0.5,0.5,0.5,1.0
+def c27,0.8,0.8,0.8,0.8
+def c28,2.0,1.0,0.0,0.0
+
+dcl t0.rg  //base color
+dcl t1.rg //base bump
+//dcl t2.rg //night
+dcl t4.rgb //light vector
+dcl t5.rgb //half vector
+dcl t6.rgb //view vector
+dcl t7.rgb //view vector
+
+dcl_2d s0
+dcl_2d s1
+//dcl_2d s2
+
+texld r1,t1,s1  //base bump
+//view vector
+mul r9.xyz,t6,c23
+add r8.xyz,r9,c22
+nrm r9.xyz,r8
+//height
+mul r11,r1.a,c23
+add r10,r11,c22
+mul r10,r10,c25
+//view * height
+mad r11.xy,r9,r10,t0
+//new texture paralax coords
+
+texld r0,r11,s0  //base color
+texld r1,r11,s1  //base bump
+//texld r2,r11,s2  //night
+//texcrd r4.rgb,t4  //light vector
+
+mul r1.xyz,r1,c23
+add r8.xyz,r1,c22
+nrm r1.xyz,r8
+mul r6.xyz,t4,c23
+add r8.xyz,r6,c22
+nrm r6.xyz,r8
+;mul r9.xyz,t6,c23
+;add r8.xyz,r9,c22
+;nrm r9.xyz,r8
+
+mul r2.xyz,t7,c23
+add r8.xyz,r2,c22
+nrm r2.xyz,r8
+
+dp3_sat r3,r1,r6
+
+;dp3 r2,r2,r6
+;mul r2,r2,r2
+;mov r10,c19
+;add r10.r,-r2,c28
+;add r10.g,-r2,c28
+;mul r10,r10,r2
+
+
+mul r2,r0,r3
+
+;fresenal term
+add r3,-r3,c24
+add r7,-r0,c24
+mul r8,r3,r3
+mul r8,r8,r8
+mul r3,r8,r3
+mul r3,r3,c23
+mad r4,r3,r7,r0 ;r4 is fresenal term
+
+
+
+//phase
+;texld r1,r11,s1  //base bump
+//texcrd r5.rgb,t5  //half vector
+//texld r0,t0  //base color
+
+;specular power N.H^16
+;mul r1.rgb,r1,c23
+;add r8.rgb,r1,c22
+;nrm r1.xyz,r8
+mul r6.rgb,t5,c23
+add r8.rgb,r6,c22
+nrm r6.xyz,r8
+
+dp3_sat r5,r1,r6
+mul r5.rgb,r5,r5
+mul r5.rgb,r5,r5
+mov r2.a,c1.a
+mul r5,r5,r5
+mul r5,r5,r5
+mul r5,r5,r5
+mul r5,c4,r5
+
+;final result
+mad r4.rgb,r5,r4,r2
+;add r4.rgb,r4,r10
+
+dp3_sat r1,r1,r9
+add r1,-r1,c24
+mul r1,r1,r1
+;mul r1,r1,r1
+add r1,-r1,c24
+
+
+mov r4.a,r1.r
+mul r4.a,r4,r0
+
+;mov r4.a,r0.a
+mov oC0,r4
+;21 instructions

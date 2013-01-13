@@ -1,0 +1,15 @@
+vs_1_1
+
+dcl_position v0
+dcl_texcoord v1
+
+;transform pos
+dp4 oPos.x, v0, c0
+dp4 oPos.y, v0, c1
+dp4 oPos.z, v0, c2
+dp4 oPos.w, v0, c3
+
+mov oT0,v1
+mov oD0,c30
+
+;6 instructions

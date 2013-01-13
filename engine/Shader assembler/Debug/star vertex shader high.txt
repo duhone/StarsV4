@@ -1,0 +1,39 @@
+vs_1_1
+
+dcl_position v0
+dcl_texcoord v1
+
+;transform pos
+dp4 oPos.x, v0, c0
+dp4 oPos.y, v0, c1
+dp4 oPos.z, v0, c2
+dp4 oPos.w, v0, c3
+
+mov oT0,v1
+mov r3,c32
+mad oT3,r3,c12,v1
+mov oT4,c30
+
+;transform view pos
+mov r6,c14
+dp4 r5.x, r6, c4
+dp4 r5.y, r6, c5
+dp4 r5.z, r6, c6
+
+;create view vector
+add r0.xyz,-v0.xyz,r5.xyz
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r1.xyz,r1.xxx,r0.xyz
+
+;bias view vector
+mov r10,c22
+mad oT1.xyz,r1.xyz,r10.xyz,r10.xyz
+
+;output normal
+
+;bias normal vector
+mad oT2.xyz,v0.xyz,r10.xyz,r10.xyz
+
+
+;19 instructions

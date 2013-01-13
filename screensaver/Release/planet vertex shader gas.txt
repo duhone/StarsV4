@@ -1,0 +1,113 @@
+vs_1_1
+
+dcl_position v0
+dcl_texcoord v1
+dcl_tangent v2
+dcl_binormal v3
+
+;transform pos
+dp4 oPos.x, v0, c0
+dp4 oPos.y, v0, c1
+dp4 oPos.z, v0, c2
+dp4 oPos.w, v0, c3
+
+mov r0,v1
+add r0.x,r0.x,c12.x
+mov oT0,r0
+mov oT1,r0
+mov oT2,r0
+
+;create light vector
+mov r0,c11
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;normalize normal, not needed in stars
+dp3 r2.x,v0,v0
+rsq r2.x,r2.x
+mul r2.xyz,r2.xxx,v0.xyz
+
+;transform light to tangent space
+dp3 r1.x, r0, v2
+dp3 r1.y, r0, v3
+dp3 r1.z, r0, r2
+mov r0.xyz,r1.xyz
+
+;normalize transformed vector
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;bias light vector
+mul r0.xyz,r0.xyz,c22.xyz
+add r0.xyz,r0.xyz,c22.xyz
+
+mov oT4,r0
+
+;create view vector
+add r0,-v0,c14
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;create light vector
+mov r5,c11
+dp3 r1.x,r5,r5
+rsq r1.x,r1.x
+mul r5.xyz,r5.xyz,r1.xxx
+
+
+;create half vector
+add r0,r0,r5
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;transform half to tangent space
+dp3 r1.x, r0, v2
+dp3 r1.y, r0, v3
+dp3 r1.z, r0, r2
+mov r0.xyz,r1.xyz
+
+;normalize transformed vector
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;bias half vector
+mul r0.xyz,r0.xyz,c22.xyz
+add r0.xyz,r0.xyz,c22.xyz
+
+mov oT5,r0
+
+;transform view pos
+mov r6,c14
+dp4 r5.x, r6, c4
+dp4 r5.y, r6, c5
+dp4 r5.z, r6, c6
+
+
+;create view vector
+add r0.xyz,-v0,r5
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;transform view to tangent space
+dp3 r1.x, r0, v2
+dp3 r1.y, r0, v3
+dp3 r1.z, r0, r2
+mov r0.xyz,r1.xyz
+
+;normalize transformed vector
+dp3 r1.x,r0,r0
+rsq r1.x,r1.x
+mul r0.xyz,r0.xyz,r1.xxx
+
+;bias view vector
+mul r0.xyz,r0.xyz,c22.xyz
+add r0.xyz,r0.xyz,c22.xyz
+
+mov oT6,r0
+;62 instructions

@@ -1,0 +1,14 @@
+ps_1_1
+
+tex t0
+texcoord t1
+texcoord t2
+
+dp3_sat r1,t1_bx2,t2_bx2
+mul r1,r1,v0
+mul r1,r1,c2
+add r0,v0,c3
+mad r0.rgb,t0,r0,r1
++mov r0.a,c1.a
+
+;8 instructions

@@ -1,0 +1,60 @@
+ps.2.0
+
+def c22,-1.0,-1.0,-1.0,-1.0
+def c23,2.0,2.0,2.0,2.0
+def c24,1.0,1.0,1.0,1.0
+def c25,0.4,0.4,0.4,0.4
+def c26,0.9,0.9,0.9,0.9
+
+dcl t0.rg
+dcl t1.rgb
+dcl t2.rgb
+dcl t3.rg
+dcl t4.rgb
+
+dcl_2d s0
+dcl_2d s1
+
+
+texld r0,t0,s0  //base texture
+//texcrd r1.rgb,t1 //view vector
+//texcrd r2.rgb,t2  //normal vector
+//texcrd r4.rgb,t4  //color
+mul r10.xyz,t1,c23
+add r8.xyz,r10,c22
+nrm r10.xyz,r8
+mul r11.xyz,t2,c23
+add r8.xyz,r11,c22
+nrm r11.xyz,r8
+
+dp3_sat r1.xyz,r10,r11
+add r1.rgb,-r1,c24
+mul r2.rgb,r1,r1
+//mul r2.rgb,r2,r2
+mul r9.rgb,r2,r2
+mul r9.rgb,r9,r9
+mul r9.rgb,r9,r9
+add r2.rgb,-r2,c24
+add r9.rgb,-r9,c24
+//mul r1.rgb,r2,t4
+mul r5.rgb,r2,c25  //view lighting
+add r5.rgb,r5,c26  //view lighting
+
+add r2.rgb,t4,c3
+mul r2.rgb,r0,r2
+mul r2.rgb,r2,c4  //regular color
+
+//phase
+texld r1,t3,s1  //noise texture
+//texcrd r4.rgb,t4  //color
+
+add r3.rgb,t4,c3
+mul r3.rgb,r1,r3
+mul r3.rgb,r3,c4
+
+add r4.rgb,r2,r3
+mul r0.rgb,r4,r5
+mov r0.a,r9.r
+
+mov oC0,r0
+;28 instructions
